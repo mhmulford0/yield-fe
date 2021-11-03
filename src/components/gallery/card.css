@@ -1,0 +1,40 @@
+.card {
+  border: 1px solid black;
+  height: 860px;
+  margin-top: 180px;
+  width: 360px;
+  float: left;
+  background-color: white;
+  margin-left: 32px;
+  border-radius: 10px;
+}
+
+.right-container {
+  margin-left: 100px;
+  padding-left: 190px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.card-body {
+  margin-top: 16px;
+  padding-right: 20px;
+  margin-right: 20px;
+  padding-left: 20px;
+}
+.card-body > img {
+  position: relative;
+  height: 300px;
+  width: 300px;
+
+  /*animation: rotation 2s infinite linear;*/
+}
+@keyframes rotation {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(359deg);
+  }
+}
