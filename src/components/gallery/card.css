@@ -1,11 +1,8 @@
 .card {
   border: 1px solid black;
-  height: 860px;
-  margin-top: 180px;
-  width: 360px;
-  float: left;
+  width: 400px;
+  max-height: 100%;
   background-color: white;
-  margin-left: 32px;
   border-radius: 10px;
 }
 
@@ -19,16 +16,11 @@
 
 .card-body {
   margin-top: 16px;
-  padding-right: 20px;
-  margin-right: 20px;
-  padding-left: 20px;
 }
-.card-body > img {
-  position: relative;
-  height: 300px;
-  width: 300px;
-
+.card-top > img {
   /*animation: rotation 2s infinite linear;*/
+  /* transform: rotate(90deg); */
+  border: 1px solid black;
 }
 @keyframes rotation {
   from {

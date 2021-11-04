@@ -78,68 +78,79 @@ const MyNFTs = () => {
       });
     } catch (err) {
       console.log(err);
-      setError(err.message);
+      setError("There was a problem with your transaction");
     }
   };
 
+  if (assets.length < 1) {
+    return <h1>No NFTs On OpenSea</h1>;
+  }
+
   return (
-    <div
-      className="container w-100"
-      style={{
-        display: "flex",
-        flexFlow: "row wrap",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
+    <div className="w-32 mt-2">
       {error ? (
-        <div class="alert alert-danger w-64" role="alert">
+        <div class="alert alert-danger w-32" role="alert">
           {error}
         </div>
       ) : (
         ""
       )}
 
-      {assets.length > 0 ? (
-        assets.map((asset) => {
-          return (
-            <div key={asset.token_id} className="w-100">
-              <div class="card">
-                <div class="card-top">
-                  <h1>{asset.name}</h1>
-                  <img src={asset.image_url} alt="nft" className="img-fluid" />
-                </div>
+      {assets.map((asset) => {
+        return (
+          <div
+            key={asset.token_id}
+            className="d-flex flex-row justify-content-center align-items-start mt-5 px-2"
+          >
+            <div className="card">
+              <div className="card-top">
+                <h1>{asset.name}</h1>
+                <img
+                  src={asset.image_url}
+                  alt="nft"
+                  className="img-fluid w-100 px-1"
+                />
+              </div>
 
-                <div class="card-body mb-4">
-                  <div className="mb-4">
-                    <h5>Description</h5>
-                    {asset.description}
-                  </div>
-                  <h5>Select Parking Garage Level:</h5>
-                  <div className="input-group mb-3 text-center">
-                    <div className="input-group-prepend">
-                      <label
-                        className="input-group-text"
-                        for="inputGroupSelect01"
-                      >
-                        Parking Level
-                      </label>
-                    </div>
-                    <select
-                      className="custom-select"
-                      id="inputGroupSelect01"
-                      onChange={handleChange}
-                      name="level"
+              <div className="card-body mb-4">
+                <div className="mb-4">
+                  <h5>Description</h5>
+                  {asset.description}
+                </div>
+                <h5>Select Parking Garage Fee:</h5>
+                <div className="input-group mb-3 text-center">
+                  <div className="input-group-prepend">
+                    <label
+                      className="input-group-text"
+                      for="inputGroupSelect01"
                     >
-                      <option value="0">Choose Level</option>
-                      <option value="10">$10</option>
-                      <option value="25">$25</option>
-                      <option value="50">$50</option>
-                    </select>
+                      Parking Fee
+                    </label>
                   </div>
-                  <div className="mb-4 w-100">
+                  <select
+                    className="custom-select"
+                    id="inputGroupSelect01"
+                    onChange={handleChange}
+                    name="level"
+                  >
+                    <option value="0">Choose Fee</option>
+                    <option value="10">$10</option>
+                    <option value="25">$25</option>
+                    <option value="50">$50</option>
+                  </select>
+                </div>
+                <div className="mb-4 w-100">
+                  <h4>Parking Level</h4>
+                  <div
+                    className="mb-4 p-2 d-flex align-items-center"
+                    style={{
+                      backgroundColor: "#CCD2E3",
+                      justifyContent: "space-evenly",
+                    }}
+                  >
+                    <h5>L1</h5>
                     <button
-                      className="btn btn-info mx-1"
+                      className="btn btn-info"
                       onClick={async () => {
                         await window.ethereum.request({
                           method: "wallet_switchEthereumChain",
@@ -150,6 +161,19 @@ const MyNFTs = () => {
                     >
                       Ethereum
                     </button>
+
+                    <button className="btn btn-warning mx-1 disabled">
+                      Solana
+                    </button>
+                  </div>
+                  <div
+                    className="mb-4 p-2 d-flex align-items-center"
+                    style={{
+                      backgroundColor: "#CCDEE3",
+                      justifyContent: "space-evenly",
+                    }}
+                  >
+                    <h5>L2</h5>
                     <button
                       className="btn btn-primary"
                       onClick={async () => {
@@ -175,20 +199,18 @@ const MyNFTs = () => {
                       AVAX
                     </button>
                   </div>
-                  <button
-                    className="btn btn-success btn-large"
-                    onClick={handleSubmit}
-                  >
-                    Park NFT
-                  </button>
                 </div>
+                <button
+                  className="btn btn-success btn-large"
+                  onClick={handleSubmit}
+                >
+                  Park NFT
+                </button>
               </div>
             </div>
-          );
-        })
-      ) : (
-        <h1>No NFTs On OpenSea</h1>
-      )}
+          </div>
+        );
+      })}
     </div>
   );
 };
