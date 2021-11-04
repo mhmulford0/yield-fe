@@ -6,7 +6,7 @@ import NewCard from "../NewCard";
 //{editedArticle ? <Form article = {editedArticle} updatedData = {updatedData} insertedArticle = {insertedArticle}/> : null}
 
 // import style
-import "./style.scss";
+// import "./style.scss";
 
 function ReadDBase() {
   const [articles, setArticles] = useState([]);
@@ -25,16 +25,7 @@ function ReadDBase() {
   }, []);
 
   return (
-    <div className="ReadDBase">
-      <div
-        className="col"
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      ></div>
-
+    <div className="ReadDBase row d-flex flex-row justify-content-center align-items-start mt-5 px-2 flex-wrap">
       <NewCard articles={articles} />
     </div>
   );

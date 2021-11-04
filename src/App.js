@@ -20,7 +20,7 @@ const store = createStore(
 
 const App = () => {
   return (
-    <div className="App">
+    <div className="App" style={{ overflowX: "hidden" }}>
       <StoreProvider store={store}>
         <MainRouter />
       </StoreProvider>

@@ -18,41 +18,32 @@ function NewCard(props) {
   //   props.editArticle(article);
   // };
 
-  return (
-    <div>
-      {props.articles &&
-        props.articles.map((article) => {
-          return (
-            <div key={article.id}>
-              <div class="card">
-                <div class="card-top">
-                  <h1>NFT</h1>
-                  <div>
-                    <div class="card-body">
-                      <img src={article.title} alt="article title"></img>
-                    </div>
-                    <div>
-                      <p>
-                        <u>Date Parked:</u> {article.date}
-                      </p>
-                      <p>
-                        <u>Garage Deposit:</u> ${article.deposit}
-                      </p>
-                      <p>
-                        <u>Parking Yield:</u> {article.body}
-                      </p>
-                    </div>
-                    <div class="card-body">
-                      <img src={TheMeter} alt="meter"></img>
-                    </div>
-                  </div>
-                </div>
-              </div>
+  return props.articles.map((article) => {
+    return (
+      <div key={article.id} className="col col-12 col-sm-6 col-lg-4  mb-4">
+        <div class="card">
+          <div class="card-top">
+            <h1>NFT</h1>
+            <img src={article.title} alt="article title"></img>
+            <div class="card-body">
+              <p>
+                <u>Date Parked:</u> {article.date}
+              </p>
+              <p>
+                <u>Garage Deposit:</u> ${article.deposit}
+              </p>
+              <p>
+                <u>Parking Yield:</u> {article.body}
+              </p>
             </div>
-          );
-        })}
-    </div>
-  );
+            <div class="card-body">
+              <img src={TheMeter} alt="meter" className="img-fluid"></img>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  });
 }
 
 export default NewCard;

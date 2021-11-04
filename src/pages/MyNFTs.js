@@ -87,131 +87,129 @@ const MyNFTs = () => {
   }
 
   return (
-    <div className="w-32 mt-2">
+    <>
       {error ? (
-        <div class="alert alert-danger w-32" role="alert">
+        <div class="alert alert-danger w-50 mx-auto my-2" role="alert">
           {error}
         </div>
       ) : (
         ""
       )}
-
-      {assets.map((asset) => {
-        return (
-          <div
-            key={asset.token_id}
-            className="d-flex flex-row justify-content-center align-items-start mt-5 px-2"
-          >
-            <div className="card">
-              <div className="card-top">
-                <h1>{asset.name}</h1>
-                <img
-                  src={asset.image_url}
-                  alt="nft"
-                  className="img-fluid w-100 px-1"
-                />
-              </div>
-
-              <div className="card-body mb-4">
-                <div className="mb-4">
-                  <h5>Description</h5>
-                  {asset.description}
+      <div className="row align-items-center">
+        {assets.map((asset) => {
+          return (
+            <div key={asset.token_id} className="col col-lg-4 col-6 ">
+              <div className="card">
+                <div className="card-top">
+                  <h1>{asset.name}</h1>
+                  <img
+                    src={asset.image_url}
+                    alt="nft"
+                    className="img-fluid w-100 px-1"
+                  />
                 </div>
-                <h5>Select Parking Garage Fee:</h5>
-                <div className="input-group mb-3 text-center">
-                  <div className="input-group-prepend">
-                    <label
-                      className="input-group-text"
-                      for="inputGroupSelect01"
-                    >
-                      Parking Fee
-                    </label>
+
+                <div className="card-body mb-4">
+                  <div className="mb-4">
+                    <h5>Description</h5>
+                    {asset.description}
                   </div>
-                  <select
-                    className="custom-select"
-                    id="inputGroupSelect01"
-                    onChange={handleChange}
-                    name="level"
-                  >
-                    <option value="0">Choose Fee</option>
-                    <option value="10">$10</option>
-                    <option value="25">$25</option>
-                    <option value="50">$50</option>
-                  </select>
-                </div>
-                <div className="mb-4 w-100">
-                  <h4>Parking Level</h4>
-                  <div
-                    className="mb-4 p-2 d-flex align-items-center"
-                    style={{
-                      backgroundColor: "#CCD2E3",
-                      justifyContent: "space-evenly",
-                    }}
-                  >
-                    <h5>L1</h5>
-                    <button
-                      className="btn btn-info"
-                      onClick={async () => {
-                        await window.ethereum.request({
-                          method: "wallet_switchEthereumChain",
-                          params: [{ chainId: "0x1" }],
-                        });
-                        setNetwork("eth");
+                  <h5>Select Parking Garage Fee:</h5>
+                  <div className="input-group mb-3 text-center">
+                    <div className="input-group-prepend">
+                      <label
+                        className="input-group-text"
+                        for="inputGroupSelect01"
+                      >
+                        Parking Fee
+                      </label>
+                    </div>
+                    <select
+                      className="custom-select"
+                      id="inputGroupSelect01"
+                      onChange={handleChange}
+                      name="level"
+                    >
+                      <option value="0">Choose Fee</option>
+                      <option value="10">$10</option>
+                      <option value="25">$25</option>
+                      <option value="50">$50</option>
+                    </select>
+                  </div>
+                  <div className="mb-4 w-100">
+                    <h4>Parking Level</h4>
+                    <div
+                      className="mb-4 p-2 d-flex align-items-center"
+                      style={{
+                        backgroundColor: "#CCD2E3",
+                        justifyContent: "space-evenly",
                       }}
                     >
-                      Ethereum
-                    </button>
+                      <h5>L1</h5>
+                      <button
+                        className="btn btn-info"
+                        onClick={async () => {
+                          await window.ethereum.request({
+                            method: "wallet_switchEthereumChain",
+                            params: [{ chainId: "0x1" }],
+                          });
+                          setNetwork("eth");
+                        }}
+                      >
+                        Ethereum
+                      </button>
 
-                    <button className="btn btn-warning mx-1 disabled">
-                      Solana
-                    </button>
+                      <button className="btn btn-warning mx-1 disabled">
+                        Solana
+                      </button>
+                    </div>
+                    <div
+                      className="mb-4 p-2 d-flex align-items-center"
+                      style={{
+                        backgroundColor: "#CCDEE3",
+                        justifyContent: "space-evenly",
+                      }}
+                    >
+                      <h5>L2</h5>
+                      <button
+                        className="btn btn-primary"
+                        onClick={async () => {
+                          setNetwork("poly");
+                          await window.ethereum.request({
+                            method: "wallet_switchEthereumChain",
+                            params: [{ chainId: "0x89" }],
+                          });
+                        }}
+                      >
+                        Polygon
+                      </button>
+                      <button
+                        className="btn btn-secondary mx-1"
+                        onClick={async () => {
+                          setNetwork("avax");
+                          await window.ethereum.request({
+                            method: "wallet_switchEthereumChain",
+                            params: [{ chainId: "0xa86a" }],
+                          });
+                        }}
+                      >
+                        AVAX
+                      </button>
+                    </div>
                   </div>
-                  <div
-                    className="mb-4 p-2 d-flex align-items-center"
-                    style={{
-                      backgroundColor: "#CCDEE3",
-                      justifyContent: "space-evenly",
-                    }}
+                  <button
+                    className="btn btn-success btn-large"
+                    onClick={handleSubmit}
                   >
-                    <h5>L2</h5>
-                    <button
-                      className="btn btn-primary"
-                      onClick={async () => {
-                        setNetwork("poly");
-                        await window.ethereum.request({
-                          method: "wallet_switchEthereumChain",
-                          params: [{ chainId: "0x89" }],
-                        });
-                      }}
-                    >
-                      Polygon
-                    </button>
-                    <button
-                      className="btn btn-secondary mx-1"
-                      onClick={async () => {
-                        setNetwork("avax");
-                        await window.ethereum.request({
-                          method: "wallet_switchEthereumChain",
-                          params: [{ chainId: "0xa86a" }],
-                        });
-                      }}
-                    >
-                      AVAX
-                    </button>
-                  </div>
+                    Park NFT
+                  </button>
                 </div>
-                <button
-                  className="btn btn-success btn-large"
-                  onClick={handleSubmit}
-                >
-                  Park NFT
-                </button>
               </div>
             </div>
-          </div>
-        );
-      })}
-    </div>
+          );
+        })}
+      </div>
+    </>
   );
 };
 

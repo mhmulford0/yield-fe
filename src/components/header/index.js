@@ -21,7 +21,7 @@ const Header = () => {
     setCurrentAccount(account.toString());
   };
   return (
-    <div className="container">
+    <div className="container mb-4">
       <div className="header-container">
         <button className="btn btn-success" onClick={() => history.push("/")}>
           Home
