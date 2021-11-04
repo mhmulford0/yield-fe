@@ -17,11 +17,10 @@
 .card-body {
   margin-top: 16px;
 }
-.card-top > img {
-  /*animation: rotation 2s infinite linear;*/
-  /* transform: rotate(90deg); */
-  border: 1px solid black;
-}
+/* .card-top > img {
+  animation: rotation 2s infinite linear;
+  transform: rotate(90deg);
+} */
 @keyframes rotation {
   from {
     transform: rotate(0deg);
