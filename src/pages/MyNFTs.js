@@ -16,8 +16,6 @@ const MyNFTs = () => {
   const [assets, setAssets] = useState([]);
   const [error, setError] = useState("");
   const [level, setLevel] = useState(0);
-  const [maticAbi, setMaticAbi] = useState([]);
-  const [avaxAbi, setAvaxAbi] = useState([]);
   useEffect(() => {
     const fetchAssets = async () => {
       try {
