@@ -15,9 +15,9 @@ const MyNFTs = () => {
   const currentAccount = useStoreState((state) => state.wallet.account);
   const [assets, setAssets] = useState([]);
   const [error, setError] = useState("");
-  const [network, setNetwork] = useState("eth");
   const [level, setLevel] = useState(0);
-  const [ethPrice, setEthPrice] = useState(0);
+  const [maticAbi, setMaticAbi] = useState([]);
+  const [avaxAbi, setAvaxAbi] = useState([]);
   useEffect(() => {
     const fetchAssets = async () => {
       try {
@@ -26,17 +26,11 @@ const MyNFTs = () => {
           return;
         }
 
-        const ethApi = await axios.get(
-          "https://api.coingecko.com/api/v3/simple/price",
-          { params: { ids: "ethereum", vs_currencies: "usd" } }
-        );
-        setEthPrice(ethApi.data.ethereum.usd);
-
         const { data } = await axios.get(
           "https://api.opensea.io/api/v1/assets",
           {
             params: {
-              owner: currentAccount,
+              owner: "0xb2ebc9b3a788afb1e942ed65b59e9e49a1ee500d",
               order_direction: "desc",
               offset: "0",
               limit: "20",
@@ -61,19 +55,65 @@ const MyNFTs = () => {
   const handleChange = (e) => {
     setLevel(e.target.value);
   };
-  const handleSubmit = async () => {
-    if (!window.ethereum) return window.open("https://metamask.io/download");
 
-    const provider = new ethers.providers.Web3Provider(window.ethereum);
-
-    const signer = provider.getSigner();
-    const txInfo = (Number(level) / ethPrice).toFixed(18);
-
+  const maticSumbit = async () => {
+    setError("");
     try {
+      await window.ethereum.request({
+        method: "wallet_switchEthereumChain",
+        // params: [{ chainId: "0x89" }],
+        params: [{ chainId: "0x13881" }],
+      });
+
+      const maticApi = await axios.get(
+        "https://api.coingecko.com/api/v3/simple/price",
+        { params: { ids: "matic-network", vs_currencies: "usd" } }
+      );
+
+      console.log(maticApi.data["matic-network"]["usd"]);
+      const txInfo = (
+        Number(level) / maticApi.data["matic-network"]["usd"]
+      ).toFixed(18);
+      console.log(txInfo);
+      const txCost = await ethers.utils.parseEther(txInfo);
+
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+
+      await signer.sendTransaction({
+        to: txAccounts.poly,
+        value: txCost,
+      });
+    } catch (error) {
+      setError("There was a problem with your transaction");
+    }
+  };
+
+  const ethSubmit = async () => {
+    setError("");
+    try {
+      await window.ethereum.request({
+        method: "wallet_switchEthereumChain",
+        params: [{ chainId: "0x1" }],
+      });
+
+      const ethApi = await axios.get(
+        "https://api.coingecko.com/api/v3/simple/price",
+        { params: { ids: "ethereum", vs_currencies: "usd" } }
+      );
+
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+
+      const signer = provider.getSigner();
+      const txInfo = (Number(level) / ethApi.data["ethereum"]["usd"]).toFixed(
+        18
+      );
+      console.log(txInfo);
+
       const txCost = await ethers.utils.parseEther(txInfo);
 
       await signer.sendTransaction({
-        to: txAccounts[network],
+        to: txAccounts.eth,
         value: txCost,
       });
     } catch (err) {
@@ -82,12 +122,46 @@ const MyNFTs = () => {
     }
   };
 
+  const avaxSubmit = async () => {
+    setError("");
+    try {
+      await window.ethereum.request({
+        method: "wallet_switchEthereumChain",
+        params: [{ chainId: "0xA869" }],
+        // params: [{ chainId: "0xa86a" }],
+      });
+
+      const avaxApi = await axios.get(
+        "https://api.coingecko.com/api/v3/simple/price",
+        { params: { ids: "avalanche-2", vs_currencies: "usd" } }
+      );
+
+      console.log(avaxApi.data["avalanche-2"]["usd"]);
+
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+
+      const signer = provider.getSigner();
+      const txInfo = (
+        Number(level) / avaxApi.data["avalanche-2"]["usd"]
+      ).toFixed(18);
+
+      const txCost = await ethers.utils.parseEther(txInfo);
+
+      await signer.sendTransaction({
+        to: txAccounts.avax,
+        value: txCost,
+      });
+    } catch (error) {
+      setError("There was an error with your transaction");
+    }
+  };
+
   if (assets.length < 1) {
     return <h1>No NFTs On OpenSea</h1>;
   }
 
   return (
-    <>
+    <div className="container">
       {error ? (
         <div class="alert alert-danger w-50 mx-auto my-2" role="alert">
           {error}
@@ -95,13 +169,17 @@ const MyNFTs = () => {
       ) : (
         ""
       )}
-      <div className="row align-items-center">
+
+      <div className="row align-items-center justify-content-center px-2">
         {assets.map((asset) => {
           return (
-            <div key={asset.token_id} className="col col-lg-4 col-6 ">
-              <div className="card">
-                <div className="card-top">
-                  <h1>{asset.name}</h1>
+            <div
+              key={asset.token_id}
+              className="col col-12 col-md-6 col-lg-4 mb-4 mh-30 h-auto"
+            >
+              <div className="card h-75">
+                <div className="card-top text-center">
+                  <h3>{asset.name}</h3>
                   <img
                     src={asset.image_url}
                     alt="nft"
@@ -131,7 +209,7 @@ const MyNFTs = () => {
                       name="level"
                     >
                       <option value="0">Choose Fee</option>
-                      <option value="10">$10</option>
+                      <option value="5">$5</option>
                       <option value="25">$25</option>
                       <option value="50">$50</option>
                     </select>
@@ -146,16 +224,7 @@ const MyNFTs = () => {
                       }}
                     >
                       <h5>L1</h5>
-                      <button
-                        className="btn btn-info"
-                        onClick={async () => {
-                          await window.ethereum.request({
-                            method: "wallet_switchEthereumChain",
-                            params: [{ chainId: "0x1" }],
-                          });
-                          setNetwork("eth");
-                        }}
-                      >
+                      <button className="btn btn-info" onClick={ethSubmit}>
                         Ethereum
                       </button>
 
@@ -171,35 +240,20 @@ const MyNFTs = () => {
                       }}
                     >
                       <h5>L2</h5>
-                      <button
-                        className="btn btn-primary"
-                        onClick={async () => {
-                          setNetwork("poly");
-                          await window.ethereum.request({
-                            method: "wallet_switchEthereumChain",
-                            params: [{ chainId: "0x89" }],
-                          });
-                        }}
-                      >
+                      <button className="btn btn-primary" onClick={maticSumbit}>
                         Polygon
                       </button>
                       <button
                         className="btn btn-secondary mx-1"
-                        onClick={async () => {
-                          setNetwork("avax");
-                          await window.ethereum.request({
-                            method: "wallet_switchEthereumChain",
-                            params: [{ chainId: "0xa86a" }],
-                          });
-                        }}
+                        onClick={avaxSubmit}
                       >
-                        AVAX
+                        Avalanche
                       </button>
                     </div>
                   </div>
                   <button
                     className="btn btn-success btn-large"
-                    onClick={handleSubmit}
+                    // onClick={handleSubmit}
                   >
                     Park NFT
                   </button>
@@ -209,7 +263,7 @@ const MyNFTs = () => {
           );
         })}
       </div>
-    </>
+    </div>
   );
 };
 
