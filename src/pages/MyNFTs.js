@@ -16,6 +16,7 @@ const MyNFTs = () => {
   const [assets, setAssets] = useState([]);
   const [error, setError] = useState("");
   const [level, setLevel] = useState(0);
+  const [success, setSuccess] = useState(false);
   useEffect(() => {
     const fetchAssets = async () => {
       try {
@@ -54,7 +55,7 @@ const MyNFTs = () => {
     setLevel(e.target.value);
   };
 
-  const maticSumbit = async () => {
+  const maticSumbit = async (imageUrl) => {
     setError("");
     try {
       await window.ethereum.request({
@@ -78,21 +79,34 @@ const MyNFTs = () => {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner();
 
-      await signer.sendTransaction({
+      const { hash } = await signer.sendTransaction({
         to: txAccounts.poly,
         value: txCost,
       });
+
+      const txConfirmation = await axios.get(
+        `https://api.polygonscan.com/api?module=transaction&action=gettxreceiptstatus&txhash=${hash}&apikey=XVWKYRXD5XF117G97C4H5FQ8GW6J1A5IF3`
+      );
+
+      if (+txConfirmation.data.status === 1) {
+        await axios.post(`${process.env.REACT_APP_API_URL}/add`, {
+          body: +25,
+          deposit: +level,
+          title: imageUrl,
+        });
+        setSuccess(true);
+      }
     } catch (error) {
       setError("There was a problem with your transaction");
     }
   };
 
-  const ethSubmit = async () => {
+  const ethSubmit = async (imageUrl) => {
     setError("");
     try {
       await window.ethereum.request({
         method: "wallet_switchEthereumChain",
-        params: [{ chainId: "0x1" }],
+        params: [{ chainId: "0x4" }],
       });
 
       const ethApi = await axios.get(
@@ -110,17 +124,30 @@ const MyNFTs = () => {
 
       const txCost = await ethers.utils.parseEther(txInfo);
 
-      await signer.sendTransaction({
+      const { hash } = await signer.sendTransaction({
         to: txAccounts.eth,
         value: txCost,
       });
+
+      const txConfirmation = await axios.get(
+        `https://api-rinkeby.etherscan.io/api?module=transaction&action=getstatus&txhash=${hash}&apikey=X6CSGN27SD6ZGT8RZPGE68597UYVV8PHDX`
+      );
+
+      if (+txConfirmation.data.status === 1) {
+        await axios.post(`${process.env.REACT_APP_API_URL}/add`, {
+          body: +25,
+          deposit: +level,
+          title: imageUrl,
+        });
+        setSuccess(true);
+      }
     } catch (err) {
       console.log(err);
       setError("There was a problem with your transaction");
     }
   };
 
-  const avaxSubmit = async () => {
+  const avaxSubmit = async (imageUrl) => {
     setError("");
     try {
       await window.ethereum.request({
@@ -145,10 +172,23 @@ const MyNFTs = () => {
 
       const txCost = await ethers.utils.parseEther(txInfo);
 
-      await signer.sendTransaction({
+      const { hash } = await signer.sendTransaction({
         to: txAccounts.avax,
         value: txCost,
       });
+
+      const txConfirmation = await axios.get(
+        `https://api-testnet.snowtrace.io/api?module=transaction&action=gettxreceiptstatus&txhash=${hash}&apikey=8FWXJYNIF1FBI8N4S3GG7TTPDVUBWRQKEV`
+      );
+
+      if (+txConfirmation.data.status === 1) {
+        await axios.post(`${process.env.REACT_APP_API_URL}/add`, {
+          body: +25,
+          deposit: +level,
+          title: imageUrl,
+        });
+        setSuccess(true);
+      }
     } catch (error) {
       setError("There was an error with your transaction");
     }
@@ -161,13 +201,20 @@ const MyNFTs = () => {
   return (
     <div className="container">
       {error ? (
-        <div class="alert alert-danger w-50 mx-auto my-2" role="alert">
+        <div class="alert alert-danger w-50 mx-auto my-4" role="alert">
           {error}
         </div>
       ) : (
         ""
       )}
-
+      {success ? (
+        <div class="alert alert-success w-50 mx-auto my-4" role="alert">
+          Transaction Sucessful
+        </div>
+      ) : (
+        ""
+      )}
+      {console.log(process.env.REACT_APP_API_URL)}
       <div className="row align-items-center justify-content-center px-2">
         {assets.map((asset) => {
           return (
@@ -195,7 +242,7 @@ const MyNFTs = () => {
                     <div className="input-group-prepend">
                       <label
                         className="input-group-text"
-                        for="inputGroupSelect01"
+                        htmlFor="inputGroupSelect01"
                       >
                         Parking Fee
                       </label>
@@ -207,7 +254,7 @@ const MyNFTs = () => {
                       name="level"
                     >
                       <option value="0">Choose Fee</option>
-                      <option value="5">$5</option>
+                      <option value="0.5">$0.50</option>
                       <option value="25">$25</option>
                       <option value="50">$50</option>
                     </select>
@@ -222,7 +269,10 @@ const MyNFTs = () => {
                       }}
                     >
                       <h5>L1</h5>
-                      <button className="btn btn-info" onClick={ethSubmit}>
+                      <button
+                        className="btn btn-info"
+                        onClick={() => ethSubmit(asset.image_url)}
+                      >
                         Ethereum
                       </button>
 
@@ -238,12 +288,15 @@ const MyNFTs = () => {
                       }}
                     >
                       <h5>L2</h5>
-                      <button className="btn btn-primary" onClick={maticSumbit}>
+                      <button
+                        className="btn btn-primary"
+                        onClick={() => maticSumbit(asset.image_url)}
+                      >
                         Polygon
                       </button>
                       <button
                         className="btn btn-secondary mx-1"
-                        onClick={avaxSubmit}
+                        onClick={() => avaxSubmit(asset.image_url)}
                       >
                         Avalanche
                       </button>
