@@ -4,8 +4,6 @@ import axios from "axios";
 
 import { ethers } from "ethers";
 
-import "../components/gallery/card.css";
-
 const txAccounts = {
   eth: "0xC39F570481EFA0C835FD2dcfEE347c521Ef8F5bb",
   poly: "0xe4eD485AAe1e4c6DF4153Daf703c660C5e77b919",
@@ -29,7 +27,7 @@ const MyNFTs = () => {
           "https://api.opensea.io/api/v1/assets",
           {
             params: {
-              owner: "0xb2ebc9b3a788afb1e942ed65b59e9e49a1ee500d",
+              owner: currentAccount,
               order_direction: "desc",
               offset: "0",
               limit: "20",
