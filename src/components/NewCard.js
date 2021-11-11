@@ -17,15 +17,18 @@ function NewCard(props) {
   // const editArticle = (article) => {
   //   props.editArticle(article);
   // };
-
+  const nftReference = (article) => {
+    return article.title || article.nftreference || article.nft_reference
+  }
   return props.articles.map((article) => {
+    console.log(article)
     return (
       <div key={article.id} className="col col-12 col-sm-6 col-lg-4  mb-4">
-        <div class="card">
-          <div class="card-top">
+        <div className="card">
+          <div className="card-top">
             <h1>NFT</h1>
-            <img src={article.title} alt="article title"></img>
-            <div class="card-body">
+            <img src={nftReference(article)} alt="article title"></img>
+            <div className="card-body">
               <p>
                 <u>Date Parked:</u> {article.date}
               </p>
@@ -36,7 +39,7 @@ function NewCard(props) {
                 <u>Parking Yield:</u> {article.body}
               </p>
             </div>
-            <div class="card-body">
+            <div className="card-body">
               <img src={TheMeter} alt="meter" className="img-fluid"></img>
             </div>
           </div>

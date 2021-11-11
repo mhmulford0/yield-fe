@@ -274,8 +274,9 @@ const MyNFTs = () => {
                         Ethereum
                       </button>
 
-                      <button className="btn btn-warning mx-1 disabled">
-                        Solana
+                      <button className="btn btn-warning mx-1 disabled d-flex flex-column justify-content-center align-items-center position-relative" style={{backgroundColor: 'rgb(112,48,160)'}}>
+                        <span className="text-light">Solana</span>
+                        <span className="fst-italic text-light position-absolute" style={{fontSize: '10px', bottom: '-2px'}}>Coming soon</span>
                       </button>
                     </div>
                     <div
@@ -300,12 +301,18 @@ const MyNFTs = () => {
                       </button>
                     </div>
                   </div>
-                  <button
-                    className="btn btn-success btn-large"
-                    // onClick={handleSubmit}
-                  >
-                    Park NFT
-                  </button>
+                  <p className="text-danger text-center" style={{
+                    fontSize: '12px'
+                  }}>Fee paid with network's native token (ETH,AVAX, Etc.)</p>
+                  <div className="d-flex align-items-center justify-content-center">
+                    <button
+                      className="btn btn-success btn-large"
+                      // onClick={handleSubmit}
+                    >
+                      Park NFT
+                    </button>
+                  </div>
+                  
                 </div>
               </div>
             </div>
