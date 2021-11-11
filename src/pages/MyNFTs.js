@@ -301,12 +301,12 @@ const MyNFTs = () => {
                       </button>
                     </div>
                   </div>
-                  <p className="text-danger text-center" style={{
+                  <p className="text-danger text-center mt-2" style={{
                     fontSize: '12px'
                   }}>Fee paid with network's native token (ETH,AVAX, Etc.)</p>
                   <div className="d-flex align-items-center justify-content-center">
                     <button
-                      className="btn btn-success btn-large"
+                      className="btn btn-success btn-large mt-4"
                       // onClick={handleSubmit}
                     >
                       Park NFT
