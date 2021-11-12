@@ -9,9 +9,12 @@ const txAccounts = {
   poly: "0xe4eD485AAe1e4c6DF4153Daf703c660C5e77b919",
   avax: "0x9060EF1a8766f0071B58af0f3e56dB2AEBbb09e8",
 };
+
 const MyNFTs = () => {
   const currentAccount = useStoreState((state) => state.wallet.account);
   const [assets, setAssets] = useState([]);
+  const [network, setNetwork] = useState("");
+  const [imageUrl, setImageUrl] = useState("");
   const [error, setError] = useState("");
   const [level, setLevel] = useState(0);
   const [success, setSuccess] = useState(false);
@@ -53,7 +56,7 @@ const MyNFTs = () => {
     setLevel(e.target.value);
   };
 
-  const maticSumbit = async (imageUrl) => {
+  const maticSumbit = async () => {
     setError("");
     try {
       await window.ethereum.request({
@@ -88,9 +91,9 @@ const MyNFTs = () => {
 
       if (+txConfirmation.data.status === 1) {
         await axios.post(`${process.env.REACT_APP_API_URL}/add`, {
-          body: +25,
+          nft_yield: +25,
           deposit: +level,
-          title: imageUrl,
+          nft_reference: imageUrl,
         });
         setSuccess(true);
       }
@@ -99,7 +102,7 @@ const MyNFTs = () => {
     }
   };
 
-  const ethSubmit = async (imageUrl) => {
+  const ethSubmit = async () => {
     setError("");
     try {
       await window.ethereum.request({
@@ -133,9 +136,9 @@ const MyNFTs = () => {
 
       if (+txConfirmation.data.status === 1) {
         await axios.post(`${process.env.REACT_APP_API_URL}/add`, {
-          body: +25,
+          nft_yield: +25,
           deposit: +level,
-          title: imageUrl,
+          nft_reference: imageUrl,
         });
         setSuccess(true);
       }
@@ -145,7 +148,7 @@ const MyNFTs = () => {
     }
   };
 
-  const avaxSubmit = async (imageUrl) => {
+  const avaxSubmit = async () => {
     setError("");
     try {
       await window.ethereum.request({
@@ -181,14 +184,26 @@ const MyNFTs = () => {
 
       if (+txConfirmation.data.status === 1) {
         await axios.post(`${process.env.REACT_APP_API_URL}/add`, {
-          body: +25,
+          nft_yield: +25,
           deposit: +level,
-          title: imageUrl,
+          nft_reference: imageUrl,
         });
         setSuccess(true);
       }
     } catch (error) {
       setError("There was an error with your transaction");
+    }
+  };
+
+  const handleSubmit = () => {
+    if (network === "ethereum") {
+      return ethSubmit();
+    }
+    if (network === "polygon") {
+      return maticSumbit();
+    }
+    if (network === "avax") {
+      return avaxSubmit();
     }
   };
 
@@ -269,13 +284,17 @@ const MyNFTs = () => {
                       <h5>L1</h5>
                       <button
                         className="btn btn-info"
-                        onClick={() => ethSubmit(asset.image_url)}
+                        onClick={() => {
+                          setImageUrl(asset.image_url);
+                          setNetwork("ethereum");
+                        }}
                       >
                         Ethereum
                       </button>
 
                       <button className="btn btn-warning mx-1 disabled">
-                        Solana
+                        Solana <br />
+                        (Coming Soon)
                       </button>
                     </div>
                     <div
@@ -288,24 +307,31 @@ const MyNFTs = () => {
                       <h5>L2</h5>
                       <button
                         className="btn btn-primary"
-                        onClick={() => maticSumbit(asset.image_url)}
+                        onClick={() => {
+                          setImageUrl(asset.image_url);
+                          setNetwork("polygon");
+                        }}
                       >
                         Polygon
                       </button>
                       <button
                         className="btn btn-secondary mx-1"
-                        onClick={() => avaxSubmit(asset.image_url)}
+                        onClick={() => {
+                          setImageUrl(asset.image_url);
+                          setNetwork("avax");
+                        }}
                       >
                         Avalanche
                       </button>
                     </div>
                   </div>
                   <button
-                    className="btn btn-success btn-large"
-                    // onClick={handleSubmit}
+                    className="btn btn-success btn-large mb-2"
+                    onClick={handleSubmit}
                   >
                     Park NFT
                   </button>
+                  <p>Fee paid with network’s native token (ETH, AVAX, Etc.)</p>
                 </div>
               </div>
             </div>
